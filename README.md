@@ -31,7 +31,7 @@ poetry install --no-dev
 Edit the configuration file to suit your wallets/date range. See `config.yaml` as an example.  
 `accounts` - list of accounts to check  
 `contract` - token contract, only supports `eosio.token:transfer` (WAX Transfers) at the moment  
-`date-range` - dates in ISO format, "YYYY-MM-DDTHH:MM:SS" <- Note the quotation marks  
+`date-range` - dates in ISO format and UTC+00 timezone, "YYYY-MM-DDTHH:MM:SS" <- Note the quotation marks  
 `currency` - Currency code to convert WAX price to. See the list of supported codes [here](docs/supported_currencies.md)  
 `export-folder` - Name of folder to store exported transactions in  
 `endpoints` - API endpoints to try to get transactions from. **Caution!** Different endpoints may produce different results, based on how up-to-date the API is.  

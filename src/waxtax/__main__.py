@@ -174,7 +174,7 @@ def main():
                 row.append(str(action["trx_id"]))
                 row.append(str(data))
                 writer.writerow(row)
-    print("Done! Press enter to finish!")
+    print("Finished!")
 
 
 if __name__ == "__main__":
