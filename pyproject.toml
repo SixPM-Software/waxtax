@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "waxtax"
+version = "1.0.0"
+description = "A tool for exporting transactions from the WAX blockchain"
+authors = ["stuckatsixpm <80179622+stuckatsixpm@users.noreply.github.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+requests = "^2.25.1"
+PyYAML = "^5.4.1"
+
+[tool.poetry.dev-dependencies]
+black = "^21.9b0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+waxtax = "waxtax.run_with_poetry:main"
