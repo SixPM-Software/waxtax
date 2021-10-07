@@ -75,7 +75,7 @@ def main():
         f"https://api.coingecko.com/api/v3/coins/wax/market_chart?vs_currency={CURRENCY.lower()}&days=max"
     )
     try:
-        history = prices.json()["prices"]
+        history = dict(prices.json()["prices"])
     except:
         print("Currency code not found")
         exit(1)
@@ -139,6 +139,7 @@ def main():
                     "contract",
                     "from",
                     "to",
+                    "memo",
                     "wax",
                     "wax_historical",
                     "value_at_date",
@@ -156,6 +157,7 @@ def main():
                 data = action["act"]["data"]
                 row.append(data["from"])
                 row.append(data["to"])
+                row.append(data["memo"])
                 row.append(data["amount"])
                 date = datetime.datetime.fromisoformat(
                     action["timestamp"].split("T")[0]
