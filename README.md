@@ -28,15 +28,13 @@ poetry install --no-dev
 
 **Setting up configuration**  
 
-Edit the configuration file to suit your wallets/date range. See `config.yaml` as an example.
-**accounts:** list of accounts to check
-**contract:** token contract, only supports `eosio.token:transfer` (WAX Transfers) at the moment
-**date-range:** dates in ISO format, "YYYY-MM-DDTHH:MM:SS" <- Note the quotation marks
-**currency:** Currency code to convert WAX price to. See the list of supported codes [here](docs/supported_currencies.md)
-**export-folder:** Name of folder to store exported transactions to
-**endpoints:** API endpoints to try to get transactions from. **Caution!** Different endpoints may produce different results, based on how up-to-date the API is.
-  - https://api-wax.eosauthority.com/v2/history/get_actions
-  - https://waxapi.ledgerwise.io/v2/history/get_actions
+Edit the configuration file to suit your wallets/date range. See `config.yaml` as an example.  
+`accounts` - list of accounts to check  
+`contract` - token contract, only supports `eosio.token:transfer` (WAX Transfers) at the moment  
+`date-range` - dates in ISO format, "YYYY-MM-DDTHH:MM:SS" <- Note the quotation marks  
+`currency` - Currency code to convert WAX price to. See the list of supported codes [here](docs/supported_currencies.md)  
+`export-folder` - Name of folder to store exported transactions in  
+`endpoints` - API endpoints to try to get transactions from. **Caution!** Different endpoints may produce different results, based on how up-to-date the API is.  
 
 **Downloading Transactions**
 
