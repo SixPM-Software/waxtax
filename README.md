@@ -3,6 +3,8 @@ Python script to download WAX transactions
 
 WAXtax uses the CoinGecko API and the WAX Blockchain History API to download csvs for each account you specify. Depending on the number of transactions you have, this could a significant amount of time to run.
 
+[Windows Tutorial](https://gist.github.com/stuckatsixpm/3c79ed98d0bce808c727e0c254b0be85)  
+*MacOS tutorial pending*  
 
 ## Installation:
 
