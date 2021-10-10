@@ -172,7 +172,7 @@ def main():
                     row.append(f"No Data")
                     row.append(f"No Data")
                 row.append(str(action["trx_id"]))
-                row.append(str(data))
+                row.append(json.dumps(data))
                 writer.writerow(row)
     print("Finished!")
 
