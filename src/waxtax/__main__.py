@@ -123,9 +123,13 @@ def main():
         for action in actions:
             if action not in filtered:
                 filtered.append(action)
-        print(f"{len(filtered)} actions found, ending at {filtered[-1]['timestamp']}")
-        wallet_actions[wallet] = filtered
-    print("Data obtained. Exporting now")
+        if len(filtered)!=0:    
+            print(f"{len(filtered)} actions found, ending at {filtered[-1]['timestamp']}")
+            wallet_actions[wallet] = filtered
+        else:
+            print(f"No actions found between {START_DATE} and {END_DATE}")
+            wallet_actions[wallet] = None
+    print("Action record fetch from blockchain complete. Exporting records now (if applicable)....")
 
     # Create CSV files from data
     for wallet in CONFIG.get("accounts", []):
@@ -147,34 +151,37 @@ def main():
                     "data",
                 ]
             )
-            for action in wallet_actions[wallet]:
-                row = []
-                row.append(str(action["timestamp"]))
-                row.append(str(action["block_num"]))
-                row.append(
-                    str(action["act"]["account"]) + " - " + str(action["act"]["name"])
-                )
-                data = action["act"]["data"]
-                row.append(data["from"])
-                row.append(data["to"])
-                row.append(data["memo"])
-                row.append(data["amount"])
-                date = datetime.datetime.fromisoformat(
-                    action["timestamp"].split("T")[0]
-                )
-                date = dt2ts(date) * 1000
-                price = history.get(date, False)
-                if price:
-                    value = history[date] * float(data["amount"])
-                    row.append(f"{CURRENCY.upper()}{round(price,5)}")
-                    row.append(f"{round(value,5)}")
-                else:
-                    row.append(f"No Data")
-                    row.append(f"No Data")
-                row.append(str(action["trx_id"]))
-                row.append(json.dumps(data))
-                writer.writerow(row)
-    print("Finished!")
+            if wallet_actions[wallet] is not None:
+                for action in wallet_actions[wallet]:
+                    row = []
+                    row.append(str(action["timestamp"]))
+                    row.append(str(action["block_num"]))
+                    row.append(
+                        str(action["act"]["account"]) + " - " + str(action["act"]["name"])
+                    )
+                    data = action["act"]["data"]
+                    row.append(data["from"])
+                    row.append(data["to"])
+                    row.append(data["memo"])
+                    row.append(data["amount"])
+                    date = datetime.datetime.fromisoformat(
+                        action["timestamp"].split("T")[0]
+                    )
+                    date = dt2ts(date) * 1000
+                    price = history.get(date, False)
+                    if price:
+                        value = history[date] * float(data["amount"])
+                        row.append(f"{CURRENCY.upper()}{round(price,5)}")
+                        row.append(f"{round(value,5)}")
+                    else:
+                        row.append(f"No Data")
+                        row.append(f"No Data")
+                    row.append(str(action["trx_id"]))
+                    row.append(json.dumps(data))
+                    writer.writerow(row)
+                print("Finished!")
+            else:
+                print("No records to export. Done.")
 
 
 if __name__ == "__main__":
