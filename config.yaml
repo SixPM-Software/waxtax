@@ -1,11 +1,15 @@
 # Update this file to match your needs.
-mode: fast # fast/robust: fast uses a single endpoint to return data quickly. Robust aggregates data from 3 nodes if possible.
+# fast/full: 
+#   "fast" mode uses a single endpoint to return data quickly.
+#   "full" mode aggregates data from 3 nodes if possible.
+
+mode: full
 max-retries: 3 # how many times to retry before aborting
 accounts:
-  # - c4vr2.wam
+  - c4vr2.wam
   - stuckatsixpm
-  # - sixpm
-  # - tag 
+  - sixpm
+  - tag 
 contract: eosio.token:transfer
 date-range:
   # start: "2021-06-30T14:00:00"
@@ -14,6 +18,3 @@ date-range:
   end: "2022-02-09T13:59:59"
 currency: AUD
 export-folder: transaction_csvs
-endpoints:
-  - https://api-wax.eosauthority.com/v2/history/get_actions
-  - https://waxapi.ledgerwise.io/v2/history/get_actions
