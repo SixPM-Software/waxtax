@@ -10,6 +10,7 @@ from pathlib import Path
 import requests
 import yaml
 
+# can specify config file location in case of multiple data pulls needed
 if len(sys.argv) == 2:
     CONFIG_PATH = Path(sys.argv[1])
 else:
@@ -25,6 +26,9 @@ with open(CONFIG_PATH, "r") as f:
 EXPORT_FOLDER = Path(CONFIG["export-folder"])
 if not os.path.isdir(EXPORT_FOLDER):
     os.mkdir(EXPORT_FOLDER)
+
+MODE = CONFIG["mode"]
+
 
 endpoint_found = False
 for i in CONFIG.get("endpoints", []):
@@ -87,6 +91,7 @@ def main():
     for wallet in CONFIG.get("accounts", []):
         print(f"Starting {wallet}")
         scans = 0
+        retries = 0
         actions = []
         start = START_DATE
         # NOTE: limit is 1000 to match standard ratelimits across API endpoints
@@ -99,21 +104,26 @@ def main():
                 "limit": 1000,
                 "sort": "asc",
                 "filter": CONFIG.get("contract", "eosio.token:transfer"),
+                "simple": "true",
             }
             actions_call = requests.get(ENDPOINT, params=params)
             try:
-                new = json.loads(actions_call.content)
-                new["actions"]
+                new = actions_call.json()
+                new["simple_actions"]
             except:
-                print(actions_call.content)
-                print(actions_call.url)
-                print(f"ERROR DOWNLOADING DATA: {wallet}, trying again")
+                if retries >= CONFIG['max-retries']:
+                    print("Maximum retries reached.")
+                    exit(1)
+                # print(actions_call.content)
+                # print(actions_call.url)
+                retries += 1
+                print(f"ERROR DOWNLOADING DATA: {wallet}, trying again ({retries}/{CONFIG['max-retries']})")
                 time.sleep(5)
                 continue
-            actions.extend(new["actions"])
-            if len(new["actions"]) < params["limit"]:
+            actions.extend(new["simple_actions"])
+            if len(new["simple_actions"]) < params["limit"]:
                 break
-            start = new["actions"][-1]["timestamp"]
+            start = new["simple_actions"][-1]["timestamp"]
             print(f"Moving to {start}")
             # delay to respect variable ratelimits between endpoints
             time.sleep(5)
@@ -155,11 +165,11 @@ def main():
                 for action in wallet_actions[wallet]:
                     row = []
                     row.append(str(action["timestamp"]))
-                    row.append(str(action["block_num"]))
+                    row.append(str(action["block"]))
                     row.append(
-                        str(action["act"]["account"]) + " - " + str(action["act"]["name"])
+                        str(action["contract"]) + " - " + str(action["action"])
                     )
-                    data = action["act"]["data"]
+                    data = action["data"]
                     row.append(data["from"])
                     row.append(data["to"])
                     row.append(data["memo"])
@@ -176,7 +186,7 @@ def main():
                     else:
                         row.append(f"No Data")
                         row.append(f"No Data")
-                    row.append(str(action["trx_id"]))
+                    row.append(str(action["transaction_id"]))
                     row.append(json.dumps(data))
                     writer.writerow(row)
                 print("Finished!")
