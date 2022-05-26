@@ -87,7 +87,7 @@ def dt2ts(dt):
 
     return calendar.timegm(dt.utctimetuple())
 
-
+# Actual main function
 @click.command()
 @click.option("--country/--no-country", default=False)
 def waxtax(country):
@@ -107,6 +107,7 @@ def waxtax(country):
     print()
     print("[WAXTax] Loading configuration")
 
+    # check for country flag
     if country:
         print(
             "[WAXTax] WARNING: Collating Country Code information is a very slow process."
@@ -122,8 +123,8 @@ def waxtax(country):
             print("[WAXTax] Exiting WAXTax")
             exit()
 
+    # load config file
     config_path = Path("config.yaml")
-
     with open(config_path, "r") as f:
         try:
             config = yaml.safe_load(f)
@@ -131,6 +132,8 @@ def waxtax(country):
             print("Invalid config file")
             exit()
     mode = config["mode"]
+
+    # run startup checks
     print(f"[Pre-Checks] Running WAXtax in {mode} mode.")
 
     START_DATE = config.get("date-range", {}).get("start")
@@ -163,6 +166,7 @@ def waxtax(country):
     else:
         print(f"[Pre-Checks] Retrieved price data for {CURRENCY}")
 
+    # start getting the data
     print()
     print("[Searching] Beginning data retrieval from the WAX Blockchain")
     print(f"[Searching] Checking for transactions between {START_DATE} and {END_DATE}")
@@ -275,7 +279,15 @@ def waxtax(country):
         "data",
     ]
     if country:
+        
+        # create a cycle to loop through endpoints to minimise spam
         endpoint_cycle = cycle(endpoints)
+        marketplaces = config.get(
+            "marketplaces", ["neftyblocksd", "atomicdropsx"]
+        )
+        marketplace_prefixes = config.get(
+            "marketplace-prefixes", ["NB Drop Payout - ID", "AtomicDrops sale, drop id:"]
+        )
     # Create CSV files from data
     for wallet in config.get("accounts", []):
         export_path = Path(config["export-folder"]) / (
@@ -321,12 +333,7 @@ def waxtax(country):
                     row.append(str(action["action_ordinal"]))
                     row.append(json.dumps(data))
                     if country:
-                        if data["from"] in config.get(
-                            "marketplaces", ["neftyblocksd", "atomicdropsx"]
-                        ) and (
-                            data["memo"].startswith("NB Drop Payout - ID")
-                            or data["memo"].startswith("AtomicDrops sale, drop id:")
-                        ):
+                        if data["from"] in marketplaces and any(data['memo'].startswith(p) for p in marketplace_prefixes):
                             try:
                                 row.append(
                                     check_country_code(
@@ -346,7 +353,7 @@ def waxtax(country):
                                     )
                                 except:
                                     row.append(
-                                        "[Error] Issue when retreiving country code. Check TRX manually"
+                                        "Error"
                                     )
                         else:
                             row.append("")
