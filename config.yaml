@@ -18,3 +18,6 @@ date-range:
   end: "2022-02-09T13:59:59"
 currency: AUD
 export-folder: transaction_csvs
+exclude-endpoints:
+  - 3dkrenderwax
+  - bp.wecan
