@@ -44,6 +44,7 @@ Edit the configuration file to suit your wallets/date range. See `config.yaml` a
 `date-range` - dates in ISO format and UTC+00 timezone, "YYYY-MM-DDTHH:MM:SS" <- Note the quotation marks  
 `currency` - Currency code to convert WAX price to. See the list of supported codes [here](docs/supported_currencies.md)  
 `export-folder` - Name of folder to store exported transactions in  
+`exclude-endpoints` - list of endpoints to exclude. Some endpoints seem to return fewer transactions than others, possibly due to complete history records.
 
 `full` vs `fast`:
 
@@ -62,6 +63,19 @@ alternatively, try:
 ```
 python -m poetry run python waxtax
 ```
+
+**Obtaining Buyer country code for Atomic and Nefty Drops**
+
+This is an experimental feature. A few notes:
+* It is slow. 
+* There are situations in which no Country Code is logged for a buyer. If this occurs, the value will be set to `None`. If there is an error retrieving a country code, the value is `Error`
+* If the transfer is not from either the `neftyblocksd` or `atomicdropsx` account, then the country_code field of the exported data will be left blank.
+
+To try to get country code data, use
+```
+poetry run python waxtax --country
+```
+
 
 ## Help/Problems
 

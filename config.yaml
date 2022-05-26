@@ -12,9 +12,11 @@ accounts:
   - tag 
 contract: eosio.token:transfer
 date-range:
-  # start: "2021-06-30T14:00:00"
-  # end: "2021-08-31T13:59:59"
+  # format: YYYY-MM-DDTHH:MM:SS
   start: "2022-01-30T14:00:00"
   end: "2022-02-09T13:59:59"
 currency: AUD
 export-folder: transaction_csvs
+exclude-endpoints:
+  - 3dkrenderwax
+  - bp.wecan
