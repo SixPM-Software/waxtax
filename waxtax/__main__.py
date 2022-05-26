@@ -79,7 +79,7 @@ def dt2ts(dt):
     return calendar.timegm(dt.utctimetuple())
 
 def waxtax():
-    print("WAX Exporter v0.1.0")
+    print("WAX Exporter v1.0.0")
     print("Created by SixPM Software")
     print()
     print("Loading configuration file")

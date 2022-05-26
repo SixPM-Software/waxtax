@@ -54,7 +54,13 @@ Edit the configuration file to suit your wallets/date range. See `config.yaml` a
 
 Inside the WAXtax directory, run
 ```
-poetry run waxtax
+poetry run python waxtax
+```
+
+alternatively, try:
+
+```
+python -m poetry run python waxtax
 ```
 
 ## Help/Problems
