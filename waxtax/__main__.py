@@ -99,8 +99,8 @@ def waxtax():
     mode = config["mode"]
     print(f"Running WAXtax in {mode} mode.")
 
-    START_DATE = config.get("date-range", {}).get("start")
-    END_DATE = config.get("date-range", {}).get("end")
+    START_DATE = config.get("date-range", {}).get("start")+"+00:00"
+    END_DATE = config.get("date-range", {}).get("end")+"+00:00"
     if not START_DATE or not END_DATE:
         print("Pre-Checks: Date range incorrectly configured.")
         exit(1)
@@ -168,7 +168,7 @@ def waxtax():
                 actions.extend(new["actions"])
                 if len(new["actions"]) < params["limit"]:
                     break
-                start = new["actions"][-1]["timestamp"]
+                start = new["actions"][-1]["timestamp"]+"+00:00"
                 print(f"{endpoint}: Moving to {start}")
                 # delay to respect variable ratelimits between endpoints
                 time.sleep(5)
