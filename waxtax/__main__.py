@@ -120,7 +120,7 @@ def waxtax():
     endpoints = pre_checks(config=config,mode=mode)
     # Get price data for currency
     prices = requests.get(
-        f"https://api.coingecko.com/api/v3/coins/wax/market_chart?vs_currency={CURRENCY.lower()}&days=max"
+        f"https://api.coingecko.com/api/v3/coins/wax/market_chart?vs_currency={CURRENCY.lower()}&days=365"
     )
     try:
         history = dict(prices.json()["prices"])
